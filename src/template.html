@@ -1,0 +1,143 @@
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap");
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+    }
+    
+    .header {
+        margin-bottom: 1rem;
+    }
+    
+    .email {
+        font-size: 0.9rem;
+        color: #2d3436;
+        font-weight: lighter;
+    }
+    
+    .course-year {
+        font-size: 0.8rem;
+        color: #2f3542;
+    }
+    
+    .submission {
+        margin: 1rem 0;
+    }
+    
+    .question-answer {
+        padding: 1rem;
+        background: #f5f6fa;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    
+    .question {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: start;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .question-text {
+        text-align: start;
+        margin-left: 0.2rem;
+        font-family: inherit;
+        margin-bottom: 0.3rem;
+    }
+    
+    .question-number {
+        font-family: inherit;
+    }
+    
+    .choices li {
+        margin: 0.5rem 1.5rem;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    
+    .question-type {
+        font-size: 0.8rem;
+    }
+    
+    .color-IMAGE {
+        color: red;
+    }
+    
+    .color-MCQ {
+        color: blue;
+    }
+    
+    .color-TYPE {
+        color: green;
+    }
+    
+    .answer-container {
+        padding: 0.5rem 0.8rem;
+        background: white;
+        border-radius: 5px;
+    }
+    
+    .answer-image {
+        width: 99%;
+    }
+</style>
+<div>
+    <div class="header">
+        <!--Student and Assessment Details-->
+        <div class="student">
+            <h3 class="name-roll">{{student.name}} ({{student.profile.rollNo}})</h3>
+            <h4 class="email">{{student.email}}</h4>
+            <p class="course-year">
+                {{student.profile.year.label}}, {{student.profile.course.name}}
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="submission">
+        {{#each answers}}
+        <div class="question-answer">
+            <div class="question-container">
+                <div class="question">
+                    <div class="question-number">Q{{inc @index}}.</div>
+                    <p class="question-text">
+                        [<span class="question-type color-{{question.type}}">{{question.type}}</span>]&nbsp;{{question.text}}
+                    </p>
+                </div>
+                {{#if (isMCQ question.type)}}
+                <div class="choices">
+                    <ol>
+                        {{#each question.choices}}
+                        <li>{{text}}</li>
+                        {{/each}}
+                    </ol>
+                </div>
+                {{/if}}
+            </div>
+            <h5 class="answer-title" style="margin:0.5rem 0">Answer:</h5>
+            <div class="answer-container">
+                {{#if (isIMAGE question.type)}}
+                <div class="image-answer">
+                    {{#each images}}
+                    <p style="text-align: center;"><span>Image {{inc @index}}/{{../images.length}}</span><br><img class="answer-image" src="{{data}}" alt="{{id}}"></p>
+                    {{/each}}
+                </div>
+                {{/if}} {{#if (isTYPE question.type)}}
+                <div class="type-answer">
+                    {{text}}
+                </div>
+                {{/if}} {{#if (isMCQ question.type)}}
+                <div class="choice-answer">
+                    {{choice.text}}
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        <hr> {{/each}}
+    </div>
+    <div class="footer">
+        <!--Xamify-->
+    </div>
+</div>
