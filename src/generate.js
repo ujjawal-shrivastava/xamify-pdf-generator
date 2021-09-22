@@ -141,6 +141,17 @@ router.get("/", async(req, res, next) => {
             printBackground: true,
         };
 
+        async function getNewPage(browser) {
+            let page = await browser.newPage();
+            page.on("error", (err) => {
+                if (!page.isClosed()) {
+                    //Close page if not closed already
+                    page.close();
+                }
+            });
+            return page;
+        }
+
         const browser = await puppeteer.launch(
             process.env.AWS_EXECUTION_ENV ?
             {
@@ -154,17 +165,34 @@ router.get("/", async(req, res, next) => {
             }
         );
 
-        const page = await browser.newPage();
-        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
-            waitUntil: "networkidle0",
-        });
-        const pdf = await page.pdf(options);
-        await browser.close();
-        res.set({
-            "Content-Type": "application/pdf",
-            "Content-Length": pdf.length,
-        });
-        res.send(pdf);
+        const page = await getNewPage(browser);
+
+        while (true) {
+            try {
+                if (page.isClosed()) {
+                    page = await getNewPage(browser);
+                }
+
+                await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+                    waitUntil: "networkidle0",
+                });
+                const pdf = await page.pdf(options);
+                await browser.close();
+                res.set({
+                    "Content-Type": "application/pdf",
+                    "Content-Length": pdf.length,
+                });
+                res.send(pdf);
+            } catch (error) {
+                console.log(
+                    "FE error with\n\n" +
+                    error +
+                    "\n\nRefreshing page and continuing profile switching"
+                );
+                await page.reload();
+                continue;
+            }
+        }
     } catch (error) {
         next(error);
     }
