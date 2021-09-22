@@ -1,0 +1,22 @@
+{
+    "name": "xamify-pdf-generator",
+    "version": "1.0.0",
+    "description": "PDF Answer Sheets Generator",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^2.0.12"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1"
+    }
+}
