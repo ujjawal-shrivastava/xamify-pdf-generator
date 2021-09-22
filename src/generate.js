@@ -139,7 +139,6 @@ router.get("/", async(req, res, next) => {
                 right: "20px",
             },
             printBackground: true,
-            path: "answerSheet.pdf",
         };
 
         const browser = await puppeteer.launch(
