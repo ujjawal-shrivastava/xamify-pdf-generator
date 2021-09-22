@@ -3,6 +3,7 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 const router = require("express").Router();
+const chrome = require("chrome-aws-lambda");
 
 router.get("/", async(req, res, next) => {
     try {
@@ -141,10 +142,19 @@ router.get("/", async(req, res, next) => {
             path: "answerSheet.pdf",
         };
 
-        const browser = await puppeteer.launch({
-            args: ["--no-sandbox"],
-            headless: true,
-        });
+        const browser = await puppeteer.launch(
+            process.env.AWS_EXECUTION_ENV ?
+            {
+                args: chrome.args,
+                executablePath: await chrome.executablePath,
+                headless: chrome.headless,
+            } :
+            {
+                args: ["--no-sandbox"],
+                headless: true,
+            }
+        );
+
         const page = await browser.newPage();
         await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
             waitUntil: "networkidle0",
