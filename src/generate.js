@@ -7,7 +7,7 @@ const chrome = require("chrome-aws-lambda");
 
 router.post("/", async(req, res, next) => {
     try {
-        var dataBinding = req.body;
+        var dataBinding = req.body.submission;
 
         // handlebars
         // increase index by 1
