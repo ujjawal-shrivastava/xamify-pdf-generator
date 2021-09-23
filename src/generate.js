@@ -86,11 +86,8 @@ router.post("/", async(req, res, next) => {
                 });
                 const pdf = await page.pdf(options);
                 await browser.close();
-                res.set({
-                    "Content-Type": "application/pdf",
-                    "Content-Length": pdf.length,
-                });
-                res.send(pdf);
+                const buffer = Buffer.from(pdf).toString("base64").toString();
+                res.send({ buffer: buffer });
             } catch (error) {
                 console.log(
                     "FE error with\n\n" +
